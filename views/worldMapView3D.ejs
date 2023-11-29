@@ -1,0 +1,264 @@
+<!-- worldMap3DView.ejs -->
+
+<style>
+  #map-container {
+    width: 100%;
+    height: 92vh;
+    border: #aaa 1px solid;
+  }
+
+  .tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    pointer-events: none;
+  }
+</style>
+
+<div id="map-container"></div>
+<%- include('sliderOverlay', { minVal: 2000, maxVal: 2022, stepVal: 1,
+initialVal: 2022 }) %>
+
+<script>
+  // D3.js code to render the world map
+  const container = document.getElementById("map-container");
+
+  // Reference width for scaling
+  const referenceWidth = 960;
+
+  const popData = {};
+
+  // Create an SVG element
+  const svg = d3
+    .select("#map-container")
+    .append("svg")
+    .style("width", "100%")
+    .style("height", "100%");
+
+  // Create a tooltip
+  const tooltip = d3
+    .select("#map-container")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+  // light green to dark green
+  const colorScale = d3
+    .scaleLinear()
+    .domain([10000000, 50000000, 100000000, 500000000, 1000000000])
+    .range(["#B1F1B4", "#7CCD7C", "#4B9F4B", "#2D762D", "#006d2c"]);
+
+  const isoNameMappings = {
+    XKX: "KOS",
+    SST: "ESH",
+  };
+
+  const verticalScale = 0.3;
+
+  // Define a function to resize the map
+  function resize() {
+    console.log("resize");
+    // Get the updated size of the container
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Update the projection with the new size
+    const projection = d3
+      .geoOrthographic()
+      .scale((width / referenceWidth) * 200)
+      .translate([width / 2, height / 2])
+      .clipAngle(90);
+
+    // Update the path generator with the new projection
+    const path = d3.geoPath().projection(projection);
+
+    // Load GeoJSON data
+    d3.json("/world.geojson").then(function (geojson) {
+      // Use D3.js to draw the map
+      svg.selectAll("*").remove(); // Clear previous paths
+
+      svg.append("circle")
+        .attr("cx", width / 2)
+        .attr("cy", height / 2)
+        .attr("r", projection.scale())
+        .attr("fill", "#cce0ff"); // Set the background color for oceans
+
+      svg
+        .selectAll("path")
+        .data(geojson.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("stroke-width", "1px")
+        .attr("stroke", "gray")
+        // .attr("transform", "translate(0, -60px)")
+        .attr(
+          "class",
+          (d) =>
+            "country_" +
+            (d.properties.iso_a3 != -99
+              ? d.properties.iso_a3
+              : d.properties.adm0_a3)
+        )
+        .style("fill", "lightsteelblue")
+        .on("mouseover", function (d) {
+          const mouseX = event.clientX;
+          const mouseY = event.clientY;
+
+          tooltip.transition().duration(200).style("opacity", 0.9);
+          let population;
+          if (popData[d.properties.iso_a3]) {
+            population = popData[d.properties.iso_a3].population;
+          } else if (popData[d.properties.adm0_a3]) {
+            population = popData[d.properties.adm0_a3].population;
+          } else {
+            let c_code;
+            if (d.properties.iso_a3 && d.properties.iso_a3 != -99) {
+              c_code = d.properties.iso_a3;
+            } else if (d.properties.adm0_a3) {
+              c_code = d.properties.adm0_a3;
+            }
+            if (c_code) {
+              // get the key from the isoNameMappings object which has value c_code
+              const key = Object.keys(isoNameMappings).find(
+                (key) => isoNameMappings[key] === c_code
+              );
+              if (key) {
+                population = popData[key].population;
+              }
+            } else {
+              console.log("No population data for " + d.properties.name);
+            }
+          }
+          if (!population) {
+            population = "No data";
+          }
+          tooltip.html(
+            "<strong>" +
+              d.properties.name +
+              "</strong><br/>" +
+              "Population: " +
+              population
+          );
+        })
+        .on("mousemove", function (d) {
+          const mouseX = event.clientX;
+          const mouseY = event.clientY;
+
+          if (mouseX > container.clientWidth - 200) {
+            tooltip.style("left", mouseX - 150 + "px");
+          } else {
+            tooltip.style("left", mouseX + 10 + "px");
+          }
+
+          if (mouseY > container.clientHeight - 100) {
+            tooltip.style("top", mouseY - 42 + "px");
+          } else {
+            tooltip.style("top", mouseY + 10 + "px");
+          }
+        })
+        .on("mouseout", function (d) {
+          // Hide tooltip on mouseout
+          tooltip.transition().duration(500).style("opacity", 0);
+        });
+
+      const drag = d3
+        .drag()
+        .subject(function () {
+          const r = projection.rotate();
+          return { x: r[0] * 5, y: -r[1] * 5};
+        })
+        .on("drag", function () {
+          const rotate = projection.rotate();
+          projection.rotate([d3.event.x / 5, -d3.event.y / 5, rotate[2]]);
+          svg.selectAll("path").attr("d", path);
+        });
+
+      svg.call(drag);
+
+      // Fetch data from the World Bank API
+      const apiUrl =
+        "http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?date=2022&format=json&per_page=300";
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          if (
+            Array.isArray(data) &&
+            data.length >= 2 &&
+            Array.isArray(data[1])
+          ) {
+            const countryData = data[1];
+            // Call the updateMap function with the fetched data
+            updateMap(countryData);
+          } else {
+            console.error("Unexpected data structure in API response.");
+          }
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    });
+  }
+
+  function updateMap(countryData) {
+    countryData.forEach((country) => {
+      const countryName = country.country.value;
+      const population = country.value;
+
+      let countryIsoCode = country.countryiso3code;
+      if (countryIsoCode == "") {
+        countryIsoCode = country.country.id;
+      }
+
+      // Store the population data in an object
+      popData[countryIsoCode] = {
+        name: countryName,
+        population: population,
+      };
+
+      // Select the country path
+      let countryPath = svg.select(".country_" + countryIsoCode);
+
+      if (countryPath.empty()) {
+        if (isoNameMappings[countryIsoCode]) {
+          countryPath = svg.select(
+            ".country_" + isoNameMappings[countryIsoCode]
+          );
+        }
+      }
+
+      // Set the fill color based on the population
+      const fillColor = colorScale(population);
+      countryPath.style("fill", fillColor);
+    });
+  }
+
+  // Call the resize function initially
+  resize();
+
+  // Add an event listener to handle resizing when the window size changes
+  window.addEventListener("resize", resize);
+
+  window.addEventListener("sliderChange", function (event) {
+    // Access the slider value from the event detail
+    const sliderValue = event.detail.value;
+
+    // Fetch data based on the slider value
+    const apiUrl = `http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?date=${sliderValue}&format=json&per_page=300`;
+
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length >= 2 && Array.isArray(data[1])) {
+          const countryData = data[1];
+          // Call the updateMap function with the fetched data
+          updateMap(countryData);
+        } else {
+          console.error("Unexpected data structure in API response.");
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  });
+</script>

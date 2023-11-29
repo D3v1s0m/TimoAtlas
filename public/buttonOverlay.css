@@ -1,0 +1,58 @@
+/* public/buttonOverlay.css */
+
+#buttonOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 3px; /* Adjust padding as needed */
+  z-index: 1000;
+}
+
+#buttonContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay-button {
+  padding: 5px 5px 1px 5px;
+  margin: 5px;
+  cursor: pointer;
+  border: 3px solid black;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.overlay-button.active {
+  border: 3px solid darkorange
+}
+
+.overlay-button.active:hover {
+  border: 3px solid orange;
+}
+
+.overlay-button:hover {
+  border: 3px solid orange;
+}
+
+.buttonTooltip {
+  position: absolute;
+  top: -30px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px;
+  background-color: lightgray;
+  border: 1px solid gray;
+  border-radius: 5px;
+  display: none;
+}
+
+.overlay-button:hover .buttonTooltip {
+  display: block;
+}

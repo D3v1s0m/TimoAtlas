@@ -1,0 +1,23 @@
+<!-- views/main.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/buttonOverlay.css" />
+    <!-- Include the button overlay styles -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- Font Awesome CSS -->
+    <title>TimoAtlas - World</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+  </head>
+  <body>
+    <% if (!view) { view = 'worldMapView'; } %>
+    <%- include(view) %>
+  </body>
+</html>

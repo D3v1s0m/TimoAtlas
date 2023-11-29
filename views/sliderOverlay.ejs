@@ -1,0 +1,151 @@
+<!-- sliderOverlay.ejs -->
+
+<style>
+  #slider-container {
+    width: 100%;
+  }
+
+  #slider {
+    width: 80%;
+    margin: auto;
+    margin-top: 30px;
+    position: relative;
+  }
+
+  #slider-track {
+    height: 10px;
+    background-color: #ddd;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+  }
+
+  #slider-thumb {
+    height: 20px;
+    width: 20px;
+    background-color: #3498db;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  #slider-values {
+    display: flex;
+    justify-content: space-between;
+    /* margin-top: 10px; */
+  }
+
+  .step-label {
+    position: absolute;
+    transform: translateX(-25%);
+    top: -25px;
+  }
+</style>
+
+<div id="slider-container">
+  <div id="slider">
+    <div id="slider-values" class="step-labels"></div>
+    <div id="slider-track"></div>
+    <div id="slider-thumb"></div>
+  </div>
+</div>
+
+<script>
+  // Set your minimum, maximum, step, and initial values
+  const minValue = <%= minVal %>;
+  const maxValue = <%= maxVal %>;
+  const stepValue = <%= stepVal %>;
+  let currentValue = <%= initialVal %>;
+
+  if (currentValue < minValue) {
+    currentValue = minValue;
+  } else if (currentValue > maxValue) {
+    currentValue = maxValue;
+  }
+
+//   const minValue = 2000;
+//   const maxValue = 2022;
+//   const stepValue = 1;
+//   let currentValue = 2022;
+
+  // Select the slider elements
+  const slider = d3.select("#slider");
+  const sliderTrack = d3.select("#slider-track");
+  const sliderThumb = d3.select("#slider-thumb");
+  const stepLabels = d3.select("#slider-values");
+
+  // Display the initial value
+  //   d3.select("#slider-value").text(`Value: ${currentValue}`);
+
+  // Set the initial position of the thumb
+  const initialThumbPosition =
+    ((currentValue - minValue) / (maxValue - minValue)) * 100;
+  sliderThumb.style("left", `${initialThumbPosition}%`);
+
+  // Create a function to update the value and thumb position
+  function updateSlider(value) {
+    // Round the value to the nearest step
+    const roundedValue = Math.round(value / stepValue) * stepValue;
+
+    // Clamp the value within the min and max range
+    const clampedValue = Math.min(maxValue, Math.max(minValue, roundedValue));
+
+    // Update the slider value
+    d3.select("#slider-value").text(`Value: ${clampedValue}`);
+
+    // Update the position of the thumb
+    const thumbPosition =
+      ((clampedValue - minValue) / (maxValue - minValue)) * 100;
+    sliderThumb.style("left", `${thumbPosition}%`);
+
+    const sliderChangeEvent = new CustomEvent("sliderChange", {
+      detail: { value: clampedValue },
+    });
+    window.dispatchEvent(sliderChangeEvent);
+  }
+
+  // Generate step labels and position them
+  for (let i = minValue; i <= maxValue; i += stepValue) {
+    const stepLabel = stepLabels
+      .append("div")
+      .classed("step-label", true)
+      .text(i)
+      .style("left", `${((i - minValue) / (maxValue - minValue)) * 100}%`)
+      .on("click", function () {
+        // Calculate the value associated with the clicked step
+        const clickedValue = i;
+
+        // Update the slider value
+        updateSlider(clickedValue);
+      });
+  }
+
+  sliderTrack.on("click", function () {
+    // Calculate the new value based on the clicked position
+    const clickPosition = d3.mouse(this)[0];
+    const newThumbPosition = clickPosition / slider.node().offsetWidth;
+    const newValue = minValue + newThumbPosition * (maxValue - minValue);
+
+    // Update the slider value
+    updateSlider(newValue);
+  });
+
+  // Use d3.drag to enable dragging of the slider thumb
+  sliderThumb.call(
+    d3
+      .drag()
+      .on("start", function () {
+        d3.event.sourceEvent.stopPropagation(); // Prevent dragstart on parent element
+      })
+      .on("drag", function () {
+        // Calculate the new value based on the thumb position
+        const thumbPosition = d3.event.x / slider.node().offsetWidth;
+        const newValue = minValue + thumbPosition * (maxValue - minValue);
+
+        // Update the slider value
+        updateSlider(newValue);
+      })
+  );
+</script>
