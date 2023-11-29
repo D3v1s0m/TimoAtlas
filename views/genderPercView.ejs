@@ -156,7 +156,7 @@ initialVal: 2022 }) %>
 
       // Fetch data from the World Bank API
       const apiUrl =
-        "http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL.FE.ZS?date=2022&format=json&per_page=350";
+        "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL.FE.ZS?date=2022&format=json&per_page=350";
 
       fetch(apiUrl)
         .then((response) => response.json())
@@ -221,7 +221,7 @@ initialVal: 2022 }) %>
     const sliderValue = event.detail.value;
 
     // Fetch data based on the slider value
-    const apiUrl = `http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL.FE.ZS?date=${sliderValue}&format=json&per_page=350`;
+    const apiUrl = `https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL.FE.ZS?date=${sliderValue}&format=json&per_page=350`;
 
     fetch(apiUrl)
       .then((response) => response.json())
