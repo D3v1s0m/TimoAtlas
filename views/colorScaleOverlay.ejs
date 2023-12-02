@@ -1,0 +1,43 @@
+<!-- colorScaleOverlay.ejs -->
+
+<style>
+  #color-scale-container {
+    position: fixed;
+    top: 10px;
+    left: calc(100% - 70px);
+    height: 200px;
+    width: 20px;
+  }
+
+  #color-scale-overlay {
+    position: relative;
+    height: 100%;
+    background: linear-gradient(to bottom, <%= range.map((color, i) => color + ' ' + (i * (100 / (range.length - 1))) + '%').join(', ') %>);
+    border-right: 1px solid #aaa;
+    border-radius: 5px;
+  }
+
+  .color-legend {
+    position: absolute;
+    color: black;
+    font-size: 12px;
+    text-align: center;
+    width: 40px; /* Adjust width as needed */
+  }
+
+  <% range.forEach((color, i) => { %>
+    .color-legend<%= i %> {
+      left: calc(100% - 60px); /* Adjust left position as needed */
+      top: <%= i * (186 / (range.length - 1)) %>px; /* Adjust top position as needed */
+    }
+  <% }); %>
+</style>
+
+<div id="color-scale-container">
+  <div id="color-scale-overlay"></div>
+  <% range.forEach((color, i) => { %>
+  <div class="color-legend color-legend<%= i %>">
+    <%- domain[i].toLocaleString() %>
+  </div>
+  <% }); %>
+</div>

@@ -4,6 +4,7 @@
   #map-container {
     width: 100%;
     height: 92vh;
+    border: #aaa 1px solid;
   }
 
   .tooltip {
@@ -21,6 +22,7 @@
 <div id="map-container"></div>
 <%- include('sliderOverlay', { minVal: 2000, maxVal: 2022, stepVal: 1,
 initialVal: 2022 }) %>
+<%- include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db", "#c975da", "#89a7bd", "#3182bd"] }) %>
 
 <script>
   // D3.js code to render the world map
@@ -79,7 +81,7 @@ initialVal: 2022 }) %>
         .append("path")
         .attr("d", path)
         .attr("stroke-width", "1px")
-        .attr("stroke", "white")
+        .attr("stroke", "lightgray")
         .attr(
           "class",
           (d) =>

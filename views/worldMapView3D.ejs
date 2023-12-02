@@ -22,6 +22,7 @@
 <div id="map-container"></div>
 <%- include('sliderOverlay', { minVal: 2000, maxVal: 2022, stepVal: 1,
 initialVal: 2022 }) %>
+<%- include('colorScaleOverlay', { domain: [10000000, 50000000, 100000000, 500000000, 1000000000], range: ["#B1F1B4", "#7CCD7C", "#4B9F4B", "#2D762D", "#006d2c"] }) %> 
 
 <script>
   // D3.js code to render the world map
