@@ -18,10 +18,10 @@ app.use((req, res, next) => {
 });
 
 const views = [
-  { name: 'World Map', description: 'A world map showing the population of each country', url: '/world-map', title: 'World Map' },
-  { name: 'World Map 3D', description: 'A 3D world map showing the population of each country', url: '/world-map-3d', title: 'World Map 3D' },
-  { name: 'Female %', description: 'A world map showing the female population percentage of each country', url: '/gender-per', title: 'Female Population Percentage' },
-  { name: 'Female % 3D', description: 'A 3D world map showing the female population percentage of each country', url: '/gender-per-3d', title: 'Female Population Percentage 3D' }
+  { name: 'World Map', description: 'View the population distribution of countries on a detailed world map.', url: '/world-map', title: 'World Map' },
+  { name: '3D World Map', description: 'Explore a globe version of the world map with population details.', url: '/world-map-3d', title: '3D World Map' },
+  { name: 'Female Population Map', description: 'See the percentage of female population in countries on a world map.', url: '/gender-per', title: 'Female Population Map' },
+  { name: '3D Female Population Map', description: 'Experience a three-dimensional globe representing the percentage of female population across countries.', url: '/gender-per-3d', title: '3D Female Population Map' }
 ];
 
 app.get('/', (req, res) => {
