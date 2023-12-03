@@ -1,5 +1,21 @@
 <!-- colorScaleOverlay.ejs -->
 
+<%
+// Helper function to format numbers in different scales
+function formatNumberWithScale(number) {
+  const scales = ['', ' Thousand', ' Million', ' Billion', ' Trillion'];
+
+  for (let i = 0; i < scales.length; i++) {
+    const divider = Math.pow(1000, i);
+    if (number < Math.pow(1000, i + 1)) {
+      return (number / divider).toFixed(2) + scales[i];
+    }
+  }
+
+  return number.toLocaleString();
+}
+%>
+
 <style>
   #color-scale-container {
     position: fixed;
@@ -37,7 +53,7 @@
   <div id="color-scale-overlay"></div>
   <% range.forEach((color, i) => { %>
   <div class="color-legend color-legend<%= i %>">
-    <%- domain[i].toLocaleString() %>
+    <%= formatNumberWithScale(domain[i]) %>
   </div>
   <% }); %>
 </div>

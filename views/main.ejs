@@ -7,17 +7,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/buttonOverlay.css" />
-    <!-- Include the button overlay styles -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <!-- Font Awesome CSS -->
-    <title>TimoAtlas - World</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        text-align: center;
+        font-size: 18px;
+      }
+
+      h1 {
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo {
+        width: 80px;
+        margin-right: 10px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        margin: 10px;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        cursor: pointer; /* Make the card clickable */
+        transition: background-color 0.3s ease-in-out,
+          transform 0.2s ease-in-out; /* Add smooth transition effect */
+      }
+
+      li:hover {
+        background-color: #f0f0f0; /* Change background color on hover */
+        transform: scale(1.02); /* Scale the card on hover */
+      }
+
+      a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      li p {
+        color: #555;
+      }
+
+      h2 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 24px; /* Adjust the font size as needed */
+      }
+    </style>
+    <title><%= typeof title !== "undefined" ? title : "TimoAtlas" %></title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
   </head>
   <body>
-    <% if (!view) { view = 'worldMapView'; } %>
-    <%- include(view) %>
+    <% if (typeof view !== "undefined") { %> <%- include(view) %> <% } else { %>
+    <h1>
+      <img class="logo" src="/images/logo/logo.png" alt="Flaticon Logo" />
+      TimoAtlas
+    </h1>
+    <h2>Explore TimoAtlas Views</h2>
+
+    <ul>
+      <% if (views) { %> <% for( let i = 0; i < views.length; i++ ) { %>
+      <li onclick="window.location='<%= views[i].url %>'">
+        <a href="<%= views[i].url %>"><%= views[i].name %></a><br />
+        <%= views[i].description %>
+      </li>
+      <% } %> <% } %>
+    </ul>
+    <% } %>
   </body>
 </html>
