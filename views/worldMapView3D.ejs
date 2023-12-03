@@ -1,6 +1,11 @@
 <!-- worldMap3DView.ejs -->
 
 <style>
+  body {
+    font-family: sans-serif;
+    margin: 8px;
+  }
+
   #map-container {
     width: 100%;
     height: 92vh;
@@ -20,9 +25,12 @@
 </style>
 
 <div id="map-container"></div>
+<%- include('backButton') %>
 <%- include('sliderOverlay', { minVal: 2000, maxVal: 2022, stepVal: 1,
 initialVal: 2022 }) %>
-<%- include('colorScaleOverlay', { domain: [10000000, 50000000, 100000000, 500000000, 1000000000], range: ["#B1F1B4", "#7CCD7C", "#4B9F4B", "#2D762D", "#006d2c"] }) %> 
+<%- include('colorScaleOverlay', { domain: [10000,
+50000000, 100000000, 500000000, 1420000000], range: ["#B1F1B4", "#7CCD7C",
+"#4B9F4B", "#2D762D", "#006d2c"] }) %>
 
 <script>
   // D3.js code to render the world map
@@ -49,7 +57,7 @@ initialVal: 2022 }) %>
   // light green to dark green
   const colorScale = d3
     .scaleLinear()
-    .domain([10000000, 50000000, 100000000, 500000000, 1000000000])
+    .domain([10000, 50000000, 100000000, 500000000, 1420000000])
     .range(["#B1F1B4", "#7CCD7C", "#4B9F4B", "#2D762D", "#006d2c"]);
 
   const isoNameMappings = {

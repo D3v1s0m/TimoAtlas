@@ -1,0 +1,52 @@
+<!-- backButton.ejs -->
+
+<style>
+  #backButton {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline for the anchor */
+  }
+</style>
+
+<!-- left-pointing arrow -->
+<a id="backButton" href="/">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+    <g
+      id="SVGRepo_tracerCarrier"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <g id="SVGRepo_iconCarrier">
+      <path
+        d="M5 12H19M5 12L11 6M5 12L11 18"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </g>
+  </svg>
+</a>
+
+<script>
+  document.getElementById("backButton").addEventListener("click", function () {
+    // Handle the back button click (redirect to the main page or perform other actions)
+    window.location.href = "/"; // Change "/" to the URL of your main page
+  });
+</script>
