@@ -18,10 +18,10 @@ app.use((req, res, next) => {
 });
 
 const views = [
-  { name: 'World Map', description: 'View the population distribution of countries on a detailed world map.', url: '/world-map', title: 'World Map' },
-  { name: '3D World Map', description: 'Explore a globe version of the world map with population details.', url: '/world-map-3d', title: '3D World Map' },
-  { name: 'Female Population Map', description: 'See the percentage of female population in countries on a world map.', url: '/gender-per', title: 'Female Population Map' },
-  { name: '3D Female Population Map', description: 'Experience a three-dimensional globe representing the percentage of female population across countries.', url: '/gender-per-3d', title: '3D Female Population Map' }
+  { name: 'Population', description: 'View the population distribution of countries on a detailed world map.', url: '/world-map', title: 'Population' },
+  { name: 'Population 3D', description: 'Explore a globe version of the world map with population details.', url: '/world-map-3d', title: 'Population - 3d' },
+  { name: 'Population, Female', description: 'See the percentage of female population in countries on a world map.', url: '/gender-per', title: 'Population, Female' },
+  { name: 'Population, Female 3D', description: 'Experience a three-dimensional globe representing the percentage of female population across countries.', url: '/gender-per-3d', title: 'Population, Female - 3D' }
 ];
 
 app.get('/', (req, res) => {
@@ -29,15 +29,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/world-map', (req, res) => {
-  res.render('main', { view: 'worldMapView', title: 'World Map' });
+  res.render('main', { view: 'worldMapView', title: 'Population' });
 });
 
 app.get('/gender-per', (req, res) => {
-  res.render('main', { view: 'genderPercView', title: 'Female Population Percentage' });
+  res.render('main', { view: 'genderPercView', title: 'Gender Percentage' });
 });
 
 app.get('/world-map-3d', (req, res) => {
-  res.render('main', { view: 'worldMapView3D' , title: 'World Map 3D' });
+  res.render('main', { view: 'worldMapView3D' , title: 'Population 3D' });
 });
 
 app.get('/gender-per-3d', (req, res) => {
