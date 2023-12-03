@@ -8,7 +8,8 @@ function formatNumberWithScale(number) {
   for (let i = 0; i < scales.length; i++) {
     const divider = Math.pow(1000, i);
     if (number < Math.pow(1000, i + 1)) {
-      return (number / divider).toFixed(2) + scales[i];
+      const formattedNumber = (number / divider).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      return (formattedNumber.endsWith('.00') ? formattedNumber.slice(0, -3) : formattedNumber) + scales[i];
     }
   }
 
