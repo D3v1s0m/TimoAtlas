@@ -21,7 +21,8 @@ const views = [
   { name: 'Population', description: 'View the population distribution of countries on a detailed world map.', url: '/world-map', title: 'Population' },
   { name: 'Population 3D', description: 'Explore a globe version of the world map with population details.', url: '/world-map-3d', title: 'Population - 3d' },
   { name: 'Population, Female', description: 'See the percentage of female population in countries on a world map.', url: '/gender-per', title: 'Population, Female' },
-  { name: 'Population, Female 3D', description: 'Experience a three-dimensional globe representing the percentage of female population across countries.', url: '/gender-per-3d', title: 'Population, Female - 3D' }
+  { name: 'Population, Female 3D', description: 'Experience a three-dimensional globe representing the percentage of female population across countries.', url: '/gender-per-3d', title: 'Population, Female - 3D' },
+  { name: 'Age Dependency Ratio', description: 'View the age dependency ratio of countries on a detailed world map.', url: '/age-dep-ratio', title: 'Age Dependency Ratio' },
 ];
 
 app.get('/', (req, res) => {
@@ -34,6 +35,10 @@ app.get('/world-map', (req, res) => {
 
 app.get('/gender-per', (req, res) => {
   res.render('main', { view: 'genderPercView', title: 'Gender Percentage' });
+});
+
+app.get('/age-dep-ratio', (req, res) => {
+  res.render('main', { view: 'ageDepRatioView', title: 'Age Dependency Ratio' });
 });
 
 app.get('/world-map-3d', (req, res) => {

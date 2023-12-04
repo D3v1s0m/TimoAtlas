@@ -5,7 +5,7 @@
     font-family: sans-serif;
     margin: 8px;
   }
-  
+
   #map-container {
     width: 100%;
     height: 92vh;
@@ -144,12 +144,14 @@ include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
             "<strong>" +
               d.properties.name +
               "</strong><br/>" +
-              "Male population: " +
-              (100 - population).toFixed(2) +
-              "%<br/>" +
-              "Female population: " +
-              population.toFixed(2) +
-              "%"
+              (population == "No data"
+                ? population
+                : "Male population: " +
+                  (100 - population).toFixed(2) +
+                  "%<br/>" +
+                  "Female population: " +
+                  population.toFixed(2) +
+                  "%")
           );
         })
         .on("mousemove", function (d) {

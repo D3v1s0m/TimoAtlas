@@ -1,4 +1,4 @@
-<!-- genderPercView.ejs -->
+<!-- ageDepRatioView.ejs -->
 
 <style>
   body {
@@ -27,8 +27,8 @@
 <div id="map-container"></div>
 <%- include('backButton') %> <%- include('sliderOverlay', { minVal: 2000,
 maxVal: 2022, stepVal: 1, initialVal: 2022 }) %> <%-
-include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
-"#c975da", "#89a7bd", "#3182bd"] }) %>
+include('colorScaleOverlay', { domain: [20, 80, 110], range: ["#add8e6",
+"#4682b4", "#000080"] }) %>
 
 <script>
   // D3.js code to render the world map
@@ -55,8 +55,8 @@ include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
 
   const colorScale = d3
     .scaleLinear()
-    .domain([42, 50, 50.01, 55])
-    .range(["#3182bd", "#89a7bd", "#c975da", "#bc27db"]);
+    .domain([20, 80, 110])
+    .range(["#add8e6", "#4682b4", "#000080"]);
 
   const isoNameMappings = {
     XKX: "KOS",
@@ -87,7 +87,7 @@ include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
         .append("path")
         .attr("d", path)
         .attr("stroke-width", "1px")
-        .attr("stroke", "lightgray")
+        .attr("stroke", "gray")
         .attr(
           "class",
           (d) =>
@@ -133,14 +133,10 @@ include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
             "<strong>" +
               d.properties.name +
               "</strong><br/>" +
+              "Age dependency ratio: " +
               (population == "No data"
                 ? population
-                : "Male population: " +
-                  (100 - population).toFixed(2) +
-                  "%<br/>" +
-                  "Female population: " +
-                  population.toFixed(2) +
-                  "%")
+                : population.toFixed(2) + "%")
           );
         })
         .on("mousemove", function (d) {
@@ -148,13 +144,13 @@ include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
           const mouseY = event.clientY;
 
           if (mouseX > container.clientWidth - 200) {
-            tooltip.style("left", mouseX - 170 + "px");
+            tooltip.style("left", mouseX - 150 + "px");
           } else {
             tooltip.style("left", mouseX + 10 + "px");
           }
 
           if (mouseY > container.clientHeight - 100) {
-            tooltip.style("top", mouseY - 54 + "px");
+            tooltip.style("top", mouseY - 42 + "px");
           } else {
             tooltip.style("top", mouseY + 10 + "px");
           }
@@ -166,7 +162,7 @@ include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
 
       // Fetch data from the World Bank API
       const apiUrl =
-        "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL.FE.ZS?date=2022&format=json&per_page=350";
+        "https://api.worldbank.org/v2/country/all/indicator/SP.POP.DPND?date=2022&format=json&per_page=300";
 
       fetch(apiUrl)
         .then((response) => response.json())
@@ -231,7 +227,7 @@ include('colorScaleOverlay', { domain: [55, 50.01, 50, 42], range: ["#bc27db",
     const sliderValue = event.detail.value;
 
     // Fetch data based on the slider value
-    const apiUrl = `https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL.FE.ZS?date=${sliderValue}&format=json&per_page=350`;
+    const apiUrl = `https://api.worldbank.org/v2/country/all/indicator/SP.POP.DPND?date=${sliderValue}&format=json&per_page=300`;
 
     fetch(apiUrl)
       .then((response) => response.json())
